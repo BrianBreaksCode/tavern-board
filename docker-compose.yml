@@ -1,0 +1,60 @@
+services:
+
+  app:
+    image: ghcr.io/${GITHUB_USER}/tavern-board:latest
+    container_name: tavern-app
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql+psycopg://tavern:${POSTGRES_PASSWORD}@db:5432/tavern_board
+      - SECRET_KEY=${SECRET_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  db:
+    image: postgres:16-alpine
+    container_name: tavern-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=tavern
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=tavern_board
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tavern"]
+      interval: 5s
+      retries: 5
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: tavern-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: tavern-watchtower
+    restart: unless-stopped
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=60
+      - WATCHTOWER_LABEL_ENABLE=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json:ro
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

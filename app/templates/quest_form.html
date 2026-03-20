@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{% if quest %}Edit Quest{% else %}Post a Quest{% endif %} — The Tavern Board{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('index') }}" style="color: var(--ink-light); font-size: 0.95rem;">← Back to the board</a>
+
+<h2 style="font-family: 'MedievalSharp', cursive; font-size: 2rem; margin: 1rem 0;">
+    {% if quest %}Edit Quest{% else %}Post a New Quest{% endif %}
+</h2>
+
+<form method="POST">
+    <div class="form-group">
+        <label for="title">Quest Title</label>
+        <input type="text" id="title" name="title"
+               value="{{ quest.title if quest else '' }}"
+               placeholder="e.g. Slay the Dragon of Thornwood" required>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description"
+                  placeholder="Describe the quest in detail…" required>{{ quest.description if quest else '' }}</textarea>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+            <label for="poster_name">Posted By</label>
+            <input type="text" id="poster_name" name="poster_name"
+                   value="{{ quest.poster_name if quest else '' }}"
+                   placeholder="Your name">
+        </div>
+
+        <div class="form-group">
+            <label for="reward_gold">Reward (gold)</label>
+            <input type="number" id="reward_gold" name="reward_gold"
+                   value="{{ quest.reward_gold if quest else 0 }}"
+                   min="0">
+        </div>
+
+        <div class="form-group">
+            <label for="danger_level">Danger Level</label>
+            <select id="danger_level" name="danger_level">
+                {% for level in ['Low', 'Medium', 'High', 'Legendary'] %}
+                <option value="{{ level }}"
+                    {% if quest and quest.danger_level == level %}selected{% endif %}>
+                    {{ level }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="btn-row">
+        <button type="submit" class="btn btn-gold">
+            {% if quest %}Update Quest{% else %}Pin to the Board{% endif %}
+        </button>
+        <a href="{{ url_for('index') }}" class="btn">Cancel</a>
+    </div>
+</form>
+{% endblock %}

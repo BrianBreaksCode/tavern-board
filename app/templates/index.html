@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav>
+    <a href="?status=all" {% if current_filter == 'all' %}class="active"{% endif %}>All Quests</a>
+    <a href="?status=Open" {% if current_filter == 'Open' %}class="active"{% endif %}>Open</a>
+    <a href="?status=Claimed" {% if current_filter == 'Claimed' %}class="active"{% endif %}>Claimed</a>
+    <a href="?status=Completed" {% if current_filter == 'Completed' %}class="active"{% endif %}>Completed</a>
+    <a href="{{ url_for('create_quest') }}" class="btn btn-gold btn-small">+ Post Quest</a>
+</nav>
+
+<div class="quest-list" style="margin-top: 1.5rem;">
+    {% if quests %}
+        {% for quest in quests %}
+        <a href="{{ url_for('view_quest', quest_id=quest.id) }}" class="quest-card">
+            <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+                <h3>{{ quest.title }}</h3>
+                <span class="status-badge status-{{ quest.status|lower }}">{{ quest.status }}</span>
+            </div>
+            <div class="quest-meta" style="margin-top: 0.4rem;">
+                <span class="gold">{{ quest.reward_gold }} gold</span>
+                <span class="danger-{{ quest.danger_level|lower }}">☠ {{ quest.danger_level }}</span>
+                <span>Posted by {{ quest.poster_name }}</span>
+                {% if quest.claimed_by %}
+                <span>Claimed by {{ quest.claimed_by }}</span>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div class="empty-board">
+            The board is empty. No quests await&hellip; for now.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
