@@ -50,6 +50,19 @@
         </div>
     </div>
 
+    <div class="form-group">
+        <label>Categories</label>
+        <div class="category-checkboxes">
+            {% for cat in all_categories %}
+            <label class="category-pill">
+                <input type="checkbox" name="categories" value="{{ cat.id }}"
+                    {% if quest and cat in quest.categories %}checked{% endif %}>
+                {{ cat.name }}
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+
     <div class="btn-row">
         <button type="submit" class="btn btn-gold">
             {% if quest %}Update Quest{% else %}Pin to the Board{% endif %}
