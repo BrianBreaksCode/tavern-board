@@ -8,6 +8,13 @@
     <a href="?status=Completed" {% if current_filter == 'Completed' %}class="active"{% endif %}>Completed</a>
     <a href="{{ url_for('create_quest') }}" class="btn btn-gold btn-small">+ Post Quest</a>
 </nav>
+<nav class="category-nav">
+    <a href="?status={{ current_filter }}" {% if not current_category %}class="active"{% endif %}>All Categories</a>
+    {% for cat in all_categories %}
+    <a href="?status={{ current_filter }}&category={{ cat.name }}"
+       {% if current_category == cat.name %}class="active"{% endif %}>{{ cat.name }}</a>
+    {% endfor %}
+</nav>
 
 <div class="quest-list" style="margin-top: 1.5rem;">
     {% if quests %}
@@ -25,6 +32,13 @@
                 <span>Claimed by {{ quest.claimed_by }}</span>
                 {% endif %}
             </div>
+            {% if quest.categories %}
+            <div class="category-tags" style="margin-top: 0.5rem;">
+                {% for cat in quest.categories %}
+                <span class="category-tag">{{ cat.name }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
         </a>
         {% endfor %}
     {% else %}

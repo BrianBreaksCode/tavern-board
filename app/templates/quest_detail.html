@@ -22,6 +22,14 @@
     </p>
     {% endif %}
 
+    {% if quest.categories %}
+    <div class="category-tags" style="margin-top: 0.8rem;">
+        {% for cat in quest.categories %}
+        <span class="category-tag">{{ cat.name }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="description">{{ quest.description }}</div>
 
     <div class="btn-row">

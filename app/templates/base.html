@@ -227,6 +227,44 @@
             width: 180px;
         }
 
+        /* ── Category nav ── */
+        .category-nav {
+            margin-top: 0.4rem;
+            padding-top: 0.4rem;
+            border-top: 1px solid var(--parchment-dark);
+            font-size: 0.9rem;
+        }
+
+        /* ── Category tags (display) ── */
+        .category-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        .category-tag {
+            font-size: 0.8rem;
+            padding: 0.1rem 0.55rem;
+            border: 1px solid var(--parchment-dark);
+            color: var(--ink-light);
+            background: rgba(212, 196, 161, 0.35);
+        }
+
+        /* ── Category checkboxes (form) ── */
+        .category-checkboxes { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .category-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.2rem 0.7rem;
+            border: 1px solid var(--parchment-dark);
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: var(--ink-light);
+            transition: all 0.15s;
+        }
+        .category-pill:has(input:checked) {
+            border-color: var(--gold-dim);
+            color: var(--ink);
+            background: rgba(201, 168, 76, 0.15);
+        }
+        .category-pill input { display: none; }
+
         .empty-board {
             text-align: center;
             padding: 3rem 1rem;
