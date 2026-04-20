@@ -6,7 +6,7 @@
     <a href="?status=Open" {% if current_filter == 'Open' %}class="active"{% endif %}>Open</a>
     <a href="?status=Claimed" {% if current_filter == 'Claimed' %}class="active"{% endif %}>Claimed</a>
     <a href="?status=Completed" {% if current_filter == 'Completed' %}class="active"{% endif %}>Completed</a>
-    <a href="{{ url_for('create_quest') }}" class="btn btn-gold btn-small">+ Post Quest</a>
+    <a href="{{ url_for('quests.create_quest') }}" class="btn btn-gold btn-small">+ Post Quest</a>
 </nav>
 <nav class="category-nav">
     <a href="?status={{ current_filter }}" {% if not current_category %}class="active"{% endif %}>All Categories</a>
@@ -19,7 +19,7 @@
 <div class="quest-list" style="margin-top: 1.5rem;">
     {% if quests %}
         {% for quest in quests %}
-        <a href="{{ url_for('view_quest', quest_id=quest.id) }}" class="quest-card">
+        <a href="{{ url_for('quests.view_quest', quest_id=quest.id) }}" class="quest-card">
             <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
                 <h3>{{ quest.title }}</h3>
                 <span class="status-badge status-{{ quest.status|lower }}">{{ quest.status }}</span>
