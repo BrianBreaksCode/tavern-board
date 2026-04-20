@@ -30,20 +30,21 @@ def index():
 @quests_bp.route("/quest/new", methods=["GET", "POST"])
 def create_quest():
     if request.method == "POST":
+        try:
+            reward_gold = int(request.form.get("reward_gold", 0))
+        except ValueError:
+            flash("Reward gold must be a whole number.", "error")
+            all_categories = Category.query.order_by(Category.name).all()
+            return render_template("quest_form.html", quest=None, all_categories=all_categories)
+        category_ids = [int(cid) for cid in request.form.getlist("categories") if cid.isdigit()]
         quest = Quest(
             title=request.form["title"],
             description=request.form["description"],
             poster_name=request.form.get("poster_name") or "Anonymous",
-            reward_gold=int(request.form.get("reward_gold", 0)),
+            reward_gold=reward_gold,
             danger_level=request.form.get("danger_level", "Low"),
         )
-        category_ids = request.form.getlist("categories")
-        valid_ids = {str(c.id) for c in Category.query.all()}
-        quest.categories = [
-            db.session.get(Category, int(cid))
-            for cid in category_ids
-            if cid in valid_ids
-        ]
+        quest.categories = Category.query.filter(Category.id.in_(category_ids)).all()
         db.session.add(quest)
         db.session.commit()
         flash("Quest posted to the board!", "success")
@@ -65,15 +66,15 @@ def edit_quest(quest_id):
         quest.title = request.form["title"]
         quest.description = request.form["description"]
         quest.poster_name = request.form.get("poster_name") or quest.poster_name
-        quest.reward_gold = int(request.form.get("reward_gold", 0))
+        try:
+            quest.reward_gold = int(request.form.get("reward_gold", 0))
+        except ValueError:
+            flash("Reward gold must be a whole number.", "error")
+            all_categories = Category.query.order_by(Category.name).all()
+            return render_template("quest_form.html", quest=quest, all_categories=all_categories)
         quest.danger_level = request.form.get("danger_level", quest.danger_level)
-        category_ids = request.form.getlist("categories")
-        valid_ids = {str(c.id) for c in Category.query.all()}
-        quest.categories = [
-            db.session.get(Category, int(cid))
-            for cid in category_ids
-            if cid in valid_ids
-        ]
+        category_ids = [int(cid) for cid in request.form.getlist("categories") if cid.isdigit()]
+        quest.categories = Category.query.filter(Category.id.in_(category_ids)).all()
         db.session.commit()
         flash("Quest updated!", "success")
         return redirect(url_for("quests.view_quest", quest_id=quest.id))
