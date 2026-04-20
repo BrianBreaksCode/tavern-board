@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="quest-detail">
-    <a href="{{ url_for('index') }}" style="color: var(--ink-light); font-size: 0.95rem;">← Back to the board</a>
+    <a href="{{ url_for('quests.index') }}" style="color: var(--ink-light); font-size: 0.95rem;">← Back to the board</a>
 
     <div style="display: flex; justify-content: space-between; align-items: start; margin-top: 1rem; gap: 1rem; flex-wrap: wrap;">
         <h2>{{ quest.title }}</h2>
@@ -34,26 +34,26 @@
 
     <div class="btn-row">
         {% if quest.status == 'Open' %}
-        <form method="POST" action="{{ url_for('claim_quest', quest_id=quest.id) }}" class="inline-form">
+        <form method="POST" action="{{ url_for('quests.claim_quest', quest_id=quest.id) }}" class="inline-form">
             <input type="text" name="adventurer_name" placeholder="Your name, adventurer" required>
             <button type="submit" class="btn btn-gold btn-small">Claim Quest</button>
         </form>
         {% elif quest.status == 'Claimed' %}
-        <form method="POST" action="{{ url_for('complete_quest', quest_id=quest.id) }}">
+        <form method="POST" action="{{ url_for('quests.complete_quest', quest_id=quest.id) }}">
             <button type="submit" class="btn btn-gold btn-small">Mark Completed</button>
         </form>
-        <form method="POST" action="{{ url_for('reopen_quest', quest_id=quest.id) }}">
+        <form method="POST" action="{{ url_for('quests.reopen_quest', quest_id=quest.id) }}">
             <button type="submit" class="btn btn-small">Reopen</button>
         </form>
         {% elif quest.status == 'Completed' %}
-        <form method="POST" action="{{ url_for('reopen_quest', quest_id=quest.id) }}">
+        <form method="POST" action="{{ url_for('quests.reopen_quest', quest_id=quest.id) }}">
             <button type="submit" class="btn btn-small">Reopen Quest</button>
         </form>
         {% endif %}
 
-        <a href="{{ url_for('edit_quest', quest_id=quest.id) }}" class="btn btn-small">Edit</a>
+        <a href="{{ url_for('quests.edit_quest', quest_id=quest.id) }}" class="btn btn-small">Edit</a>
 
-        <form method="POST" action="{{ url_for('delete_quest', quest_id=quest.id) }}"
+        <form method="POST" action="{{ url_for('quests.delete_quest', quest_id=quest.id) }}"
               onsubmit="return confirm('Tear this quest from the board?')">
             <button type="submit" class="btn btn-danger btn-small">Delete</button>
         </form>

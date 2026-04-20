@@ -2,7 +2,7 @@
 {% block title %}{% if quest %}Edit Quest{% else %}Post a Quest{% endif %} — The Tavern Board{% endblock %}
 
 {% block content %}
-<a href="{{ url_for('index') }}" style="color: var(--ink-light); font-size: 0.95rem;">← Back to the board</a>
+<a href="{{ url_for('quests.index') }}" style="color: var(--ink-light); font-size: 0.95rem;">← Back to the board</a>
 
 <h2 style="font-family: 'MedievalSharp', cursive; font-size: 2rem; margin: 1rem 0;">
     {% if quest %}Edit Quest{% else %}Post a New Quest{% endif %}
@@ -67,7 +67,7 @@
         <button type="submit" class="btn btn-gold">
             {% if quest %}Update Quest{% else %}Pin to the Board{% endif %}
         </button>
-        <a href="{{ url_for('index') }}" class="btn">Cancel</a>
+        <a href="{{ url_for('quests.index') }}" class="btn">Cancel</a>
     </div>
 </form>
 {% endblock %}
