@@ -7,12 +7,12 @@
 
     <div style="display: flex; justify-content: space-between; align-items: start; margin-top: 1rem; gap: 1rem; flex-wrap: wrap;">
         <h2>{{ quest.title }}</h2>
-        <span class="status-badge status-{{ quest.status|lower }}">{{ quest.status }}</span>
+        <span class="status-badge status-{{ quest.status.value|lower }}">{{ quest.status.value }}</span>
     </div>
 
     <div class="quest-meta" style="margin-top: 0.5rem;">
         <span class="gold">{{ quest.reward_gold }} gold</span>
-        <span class="danger-{{ quest.danger_level|lower }}">☠ {{ quest.danger_level }}</span>
+        <span class="danger-{{ quest.danger_level.value|lower }}">☠ {{ quest.danger_level.value }}</span>
         <span>Posted by {{ quest.poster_name }}</span>
     </div>
 
@@ -33,19 +33,19 @@
     <div class="description">{{ quest.description }}</div>
 
     <div class="btn-row">
-        {% if quest.status == 'Open' %}
+        {% if quest.status.value == 'Open' %}
         <form method="POST" action="{{ url_for('quests.claim_quest', quest_id=quest.id) }}" class="inline-form">
             <input type="text" name="adventurer_name" placeholder="Your name, adventurer" required>
             <button type="submit" class="btn btn-gold btn-small">Claim Quest</button>
         </form>
-        {% elif quest.status == 'Claimed' %}
+        {% elif quest.status.value == 'Claimed' %}
         <form method="POST" action="{{ url_for('quests.complete_quest', quest_id=quest.id) }}">
             <button type="submit" class="btn btn-gold btn-small">Mark Completed</button>
         </form>
         <form method="POST" action="{{ url_for('quests.reopen_quest', quest_id=quest.id) }}">
             <button type="submit" class="btn btn-small">Reopen</button>
         </form>
-        {% elif quest.status == 'Completed' %}
+        {% elif quest.status.value == 'Completed' %}
         <form method="POST" action="{{ url_for('quests.reopen_quest', quest_id=quest.id) }}">
             <button type="submit" class="btn btn-small">Reopen Quest</button>
         </form>

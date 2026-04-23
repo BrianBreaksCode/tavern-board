@@ -22,11 +22,11 @@
         <a href="{{ url_for('quests.view_quest', quest_id=quest.id) }}" class="quest-card">
             <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
                 <h3>{{ quest.title }}</h3>
-                <span class="status-badge status-{{ quest.status|lower }}">{{ quest.status }}</span>
+                <span class="status-badge status-{{ quest.status.value|lower }}">{{ quest.status.value }}</span>
             </div>
             <div class="quest-meta" style="margin-top: 0.4rem;">
                 <span class="gold">{{ quest.reward_gold }} gold</span>
-                <span class="danger-{{ quest.danger_level|lower }}">☠ {{ quest.danger_level }}</span>
+                <span class="danger-{{ quest.danger_level.value|lower }}">☠ {{ quest.danger_level.value }}</span>
                 <span>Posted by {{ quest.poster_name }}</span>
                 {% if quest.claimed_by %}
                 <span>Claimed by {{ quest.claimed_by }}</span>

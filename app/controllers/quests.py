@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 
 from app.extensions import db
-from app.models import Category, Quest
+from app.models import Category, DangerLevel, Quest, QuestStatus
 
 
 quests_bp = Blueprint("quests", __name__)
@@ -13,7 +13,7 @@ def index():
     category_filter = request.args.get("category", "")
     query = Quest.query.options(db.joinedload(Quest.categories)).order_by(Quest.created_at.desc())
     if status_filter != "all":
-        query = query.filter_by(status=status_filter)
+        query = query.filter_by(status=QuestStatus(status_filter))
     if category_filter:
         query = query.filter(Quest.categories.any(Category.name == category_filter))
     quests = query.all()
@@ -42,7 +42,7 @@ def create_quest():
             description=request.form["description"],
             poster_name=request.form.get("poster_name") or "Anonymous",
             reward_gold=reward_gold,
-            danger_level=request.form.get("danger_level", "Low"),
+            danger_level=DangerLevel(request.form.get("danger_level", "Low")),
         )
         quest.categories = Category.query.filter(Category.id.in_(category_ids)).all()
         db.session.add(quest)
@@ -72,7 +72,7 @@ def edit_quest(quest_id):
             flash("Reward gold must be a whole number.", "error")
             all_categories = Category.query.order_by(Category.name).all()
             return render_template("quest_form.html", quest=quest, all_categories=all_categories)
-        quest.danger_level = request.form.get("danger_level", quest.danger_level)
+        quest.danger_level = DangerLevel(request.form.get("danger_level", quest.danger_level.value))
         category_ids = [int(cid) for cid in request.form.getlist("categories") if cid.isdigit()]
         quest.categories = Category.query.filter(Category.id.in_(category_ids)).all()
         db.session.commit()
@@ -86,7 +86,7 @@ def edit_quest(quest_id):
 def claim_quest(quest_id):
     quest = Quest.query.get_or_404(quest_id)
     adventurer = request.form.get("adventurer_name", "A brave soul")
-    quest.status = "Claimed"
+    quest.status = QuestStatus.Claimed
     quest.claimed_by = adventurer
     db.session.commit()
     flash(f"{adventurer} claimed the quest!", "success")
@@ -96,7 +96,7 @@ def claim_quest(quest_id):
 @quests_bp.route("/quest/<int:quest_id>/complete", methods=["POST"])
 def complete_quest(quest_id):
     quest = Quest.query.get_or_404(quest_id)
-    quest.status = "Completed"
+    quest.status = QuestStatus.Completed
     db.session.commit()
     flash("Quest completed! Glory to the adventurer!", "success")
     return redirect(url_for("quests.view_quest", quest_id=quest.id))
@@ -105,7 +105,7 @@ def complete_quest(quest_id):
 @quests_bp.route("/quest/<int:quest_id>/reopen", methods=["POST"])
 def reopen_quest(quest_id):
     quest = Quest.query.get_or_404(quest_id)
-    quest.status = "Open"
+    quest.status = QuestStatus.Open
     quest.claimed_by = None
     db.session.commit()
     flash("Quest reopened on the board.", "success")

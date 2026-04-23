@@ -42,7 +42,7 @@
             <select id="danger_level" name="danger_level">
                 {% for level in ['Low', 'Medium', 'High', 'Legendary'] %}
                 <option value="{{ level }}"
-                    {% if quest and quest.danger_level == level %}selected{% endif %}>
+                    {% if quest and quest.danger_level.value == level %}selected{% endif %}>
                     {{ level }}
                 </option>
                 {% endfor %}
