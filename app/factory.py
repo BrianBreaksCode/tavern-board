@@ -26,7 +26,7 @@ def create_app() -> Flask:
     db.init_app(app)
 
     # Deferred imports break potential circular-import cycles
-    from app.controllers.quests import quests_bp
+    from app.controllers import quests_bp
     app.register_blueprint(quests_bp)
 
     from app.cli import seed_categories
